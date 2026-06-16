@@ -45,6 +45,20 @@ mark.lr-mark.lr-flash {
 }
 .lr-add-btn:hover { background: #c44e2e; }
 
+/* On touch devices the pill becomes a fixed-position FAB above the toggle,
+   well clear of iOS Safari's native selection callout. */
+.lr-add-btn.lr-fixed {
+  position: fixed;
+  top: auto !important;
+  left: auto !important;
+  bottom: 76px;
+  right: 22px;
+  padding: 11px 18px;
+  font-size: 13px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(140, 45, 25, 0.35);
+}
+
 /* ─ Composer (textarea floats near selection) ─ */
 .lr-composer {
   position: absolute;
@@ -65,6 +79,20 @@ mark.lr-mark.lr-flash {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+/* On touch devices, the composer becomes a bottom sheet so the on-screen
+   keyboard pushes it up rather than clipping the Save button off-screen. */
+.lr-composer.lr-mobile {
+  position: fixed;
+  top: auto !important;
+  left: 50% !important;
+  bottom: 14px;
+  width: min(420px, calc(100vw - 28px));
+  transform: translateX(-50%) translateY(6px);
+}
+.lr-composer.lr-mobile.lr-show {
+  transform: translateX(-50%) translateY(0);
 }
 .lr-composer-quote {
   font: italic 12px/1.45 "Source Serif 4", Georgia, serif;

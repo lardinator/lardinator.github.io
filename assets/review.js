@@ -7,6 +7,7 @@
   const STORAGE_KEY = 'lardinator.blog.notes.v1';
   const PAGE = location.pathname.replace(/index\.html?$/, '') || '/';
   const CONTENT_SELECTOR = '.post-content, .site-main';
+  const HAS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0;
 
   // ── Storage ────────────────────────────────────────────────────────
   const loadAll = () => {
@@ -84,22 +85,40 @@
   }
 
   function showAddBtn(rect) {
-    const top = window.scrollY + rect.top - 42;
-    const left = window.scrollX + Math.max(8, rect.left + rect.width / 2 - 40);
-    addBtn.style.top = top + 'px';
-    addBtn.style.left = left + 'px';
+    if (HAS_TOUCH) {
+      // On touch devices, pin the pill to a fixed bottom-right slot well clear
+      // of iOS Safari's native selection callout ("Copy / Look up / Share…").
+      addBtn.classList.add('lr-fixed');
+      addBtn.style.top = '';
+      addBtn.style.left = '';
+    } else {
+      addBtn.classList.remove('lr-fixed');
+      const top = window.scrollY + rect.top - 42;
+      const left = window.scrollX + Math.max(8, rect.left + rect.width / 2 - 40);
+      addBtn.style.top = top + 'px';
+      addBtn.style.left = left + 'px';
+    }
     addBtn.classList.add('lr-show');
   }
   function hideAddBtn() { addBtn.classList.remove('lr-show'); }
 
-  document.addEventListener('mouseup', () => {
-    setTimeout(() => {
-      const sel = getValidSelection();
-      if (!sel) { hideAddBtn(); return; }
-      currentSel = sel;
-      showAddBtn(sel.range.getBoundingClientRect());
-    }, 0);
+  function updateSelection() {
+    const sel = getValidSelection();
+    if (!sel) { hideAddBtn(); return; }
+    currentSel = sel;
+    showAddBtn(sel.range.getBoundingClientRect());
+  }
+
+  document.addEventListener('mouseup', () => setTimeout(updateSelection, 0));
+
+  // `selectionchange` is the most reliable selection signal on mobile (iOS Safari
+  // does not fire mouseup in a useful way for touch selections). Debounced.
+  let _selTimer = null;
+  document.addEventListener('selectionchange', () => {
+    clearTimeout(_selTimer);
+    _selTimer = setTimeout(updateSelection, 180);
   });
+
   document.addEventListener('mousedown', (e) => {
     if (!addBtn.contains(e.target) && !composer.contains(e.target)) hideAddBtn();
   });
@@ -113,16 +132,30 @@
       sel.text.length > 220 ? sel.text.slice(0, 220) + '…' : sel.text;
     const ta = composer.querySelector('textarea');
     ta.value = '';
-    const top = Math.min(window.innerHeight - 220, Math.max(20, rect.top + window.scrollY + 30));
-    const left = Math.min(window.innerWidth - 380, Math.max(20, rect.left + window.scrollX));
-    composer.style.top = top + 'px';
-    composer.style.left = left + 'px';
+    if (HAS_TOUCH) {
+      // On touch devices, anchor the composer to the bottom of the viewport so
+      // the on-screen keyboard pushes it up cleanly instead of clipping it.
+      composer.classList.add('lr-mobile');
+      composer.style.top = '';
+      composer.style.left = '';
+    } else {
+      composer.classList.remove('lr-mobile');
+      const top = Math.min(window.innerHeight - 220, Math.max(20, rect.top + window.scrollY + 30));
+      const left = Math.min(window.innerWidth - 380, Math.max(20, rect.left + window.scrollX));
+      composer.style.top = top + 'px';
+      composer.style.left = left + 'px';
+    }
     composer.classList.add('lr-show');
     setTimeout(() => ta.focus(), 50);
   }
   function closeComposer() { composer.classList.remove('lr-show'); }
 
-  addBtn.addEventListener('click', () => {
+  // Use `pointerdown` so the action fires BEFORE iOS Safari collapses the
+  // selection in response to the tap. `preventDefault` keeps the selection
+  // alive through the gesture (otherwise `getBoundingClientRect()` returns
+  // a zero rect for an already-collapsed range).
+  addBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
     if (!currentSel) return;
     const rect = currentSel.range.getBoundingClientRect();
     hideAddBtn();
