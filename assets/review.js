@@ -296,7 +296,14 @@
     panel.querySelector('.lr-tab[data-tab="page"]').textContent = `This page (${pageNotes.length})`;
     panel.querySelector('.lr-tab[data-tab="all"]').textContent = `All pages (${allCount})`;
     toggle.querySelector('.lr-toggle-count').textContent = pageNotes.length || allCount;
-    toggle.classList.toggle('lr-show', allCount > 0);
+    // Touch: panel toggle is always visible (otherwise mobile users have no way
+    // to reach the panel with zero notes). Desktop: only show when notes exist.
+    if (HAS_TOUCH) {
+      toggle.classList.add('lr-show');
+      toggle.classList.toggle('lr-passive', allCount === 0);
+    } else {
+      toggle.classList.toggle('lr-show', allCount > 0);
+    }
 
     const list = panel.querySelector('.lr-list');
     const view = list.dataset.view || 'page';
@@ -383,15 +390,39 @@
         }
       }
     }
-    const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
-    const a = document.createElement('a');
+    const text = lines.join('\n');
+    const blob = new Blob([text], { type: 'text/markdown' });
     const stamp = new Date().toISOString().replace(/[:T]/g, '-').slice(0, 16);
+    const filename = `review-notes-${stamp}.md`;
+
+    // On touch (iOS / Android) prefer the native Share sheet so the file
+    // lands cleanly in Mail / Files / Notes / AirDrop. Fall back to plain
+    // download if Share isn't available or fails.
+    const useShare = HAS_TOUCH && typeof navigator.share === 'function';
+    if (useShare) {
+      const file = (typeof File === 'function')
+        ? new File([blob], filename, { type: 'text/markdown' })
+        : null;
+      const sharePayload = (file && navigator.canShare && navigator.canShare({ files: [file] }))
+        ? { files: [file], title: 'Review notes', text: 'Blog review notes' }
+        : { title: 'Review notes', text: text };
+      navigator.share(sharePayload).catch(err => {
+        // User cancelled — silent. Real error — fall back to download.
+        if (err && err.name !== 'AbortError') downloadBlob(blob, filename);
+      });
+      return;
+    }
+    downloadBlob(blob, filename);
+  });
+
+  function downloadBlob(blob, filename) {
+    const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `review-notes-${stamp}.md`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
-  });
+  }
 
   // ── Restore highlights on page load ──────────────────────────────
   function restoreOnLoad() {
