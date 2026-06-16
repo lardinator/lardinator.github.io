@@ -45,8 +45,9 @@ mark.lr-mark.lr-flash {
 }
 .lr-add-btn:hover { background: #c44e2e; }
 
-/* On touch devices the pill becomes a fixed-position FAB above the toggle,
-   well clear of iOS Safari's native selection callout. */
+/* On touch devices the pill is permanently visible at a fixed bottom-right
+   slot, well clear of iOS Safari's native selection callout. It sits in a
+   muted passive state until a selection exists, then brightens. */
 .lr-add-btn.lr-fixed {
   position: fixed;
   top: auto !important;
@@ -56,7 +57,44 @@ mark.lr-mark.lr-flash {
   padding: 11px 18px;
   font-size: 13px;
   border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  background: #fff;
+  color: #8c2d19;
+  border: 1px solid #d9d4cc;
+  transform: none !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+.lr-add-btn.lr-fixed.lr-active {
+  background: #8c2d19;
+  color: #fff;
+  border-color: #8c2d19;
   box-shadow: 0 6px 18px rgba(140, 45, 25, 0.35);
+}
+.lr-add-btn.lr-fixed.lr-active:hover { background: #c44e2e; }
+
+/* Brief toast for usage hints on touch devices. */
+.lr-toast {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 10000;
+  background: rgba(26, 26, 26, 0.94);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font: 600 12.5px/1.3 -apple-system, system-ui, sans-serif;
+  max-width: 86vw;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+}
+.lr-toast.lr-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* ─ Composer (textarea floats near selection) ─ */

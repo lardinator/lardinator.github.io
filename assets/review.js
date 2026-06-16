@@ -86,33 +86,50 @@
 
   function showAddBtn(rect) {
     if (HAS_TOUCH) {
-      // On touch devices, pin the pill to a fixed bottom-right slot well clear
-      // of iOS Safari's native selection callout ("Copy / Look up / Share…").
-      addBtn.classList.add('lr-fixed');
+      // Touch: pill is permanently visible in a fixed bottom-right slot. The
+      // `lr-active` class lights it up brightly when there IS a valid selection.
+      addBtn.classList.add('lr-fixed', 'lr-show');
+      if (rect) addBtn.classList.add('lr-active');
       addBtn.style.top = '';
       addBtn.style.left = '';
     } else {
-      addBtn.classList.remove('lr-fixed');
+      addBtn.classList.remove('lr-fixed', 'lr-active');
       const top = window.scrollY + rect.top - 42;
       const left = window.scrollX + Math.max(8, rect.left + rect.width / 2 - 40);
       addBtn.style.top = top + 'px';
       addBtn.style.left = left + 'px';
+      addBtn.classList.add('lr-show');
     }
-    addBtn.classList.add('lr-show');
   }
-  function hideAddBtn() { addBtn.classList.remove('lr-show'); }
+  function hideAddBtn() {
+    if (HAS_TOUCH) {
+      // Touch: never hide; just drop the active state. The pill stays as
+      // a passive "+ Note" affordance the user can tap any time.
+      addBtn.classList.remove('lr-active');
+    } else {
+      addBtn.classList.remove('lr-show');
+    }
+  }
 
   function updateSelection() {
     const sel = getValidSelection();
-    if (!sel) { hideAddBtn(); return; }
+    if (!sel) { currentSel = null; hideAddBtn(); return; }
     currentSel = sel;
     showAddBtn(sel.range.getBoundingClientRect());
   }
 
-  document.addEventListener('mouseup', () => setTimeout(updateSelection, 0));
+  // On touch devices, prime the pill into its permanent passive state
+  // immediately so the user can see it without any selection happening yet.
+  if (HAS_TOUCH) {
+    addBtn.classList.add('lr-fixed', 'lr-show');
+  }
 
-  // `selectionchange` is the most reliable selection signal on mobile (iOS Safari
-  // does not fire mouseup in a useful way for touch selections). Debounced.
+  document.addEventListener('mouseup', () => setTimeout(updateSelection, 0));
+  // `touchend` is a more reliable backup than `selectionchange` on iOS
+  // Safari for the *initial* long-press selection — selectionchange often
+  // doesn't fire until the user drags a handle.
+  document.addEventListener('touchend', () => setTimeout(updateSelection, 50));
+
   let _selTimer = null;
   document.addEventListener('selectionchange', () => {
     clearTimeout(_selTimer);
@@ -120,11 +137,21 @@
   });
 
   document.addEventListener('mousedown', (e) => {
+    if (HAS_TOUCH) return;
     if (!addBtn.contains(e.target) && !composer.contains(e.target)) hideAddBtn();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { hideAddBtn(); closeComposer(); closePanel(); }
   });
+
+  function flashHint(msg) {
+    const t = document.createElement('div');
+    t.className = 'lr-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('lr-show'));
+    setTimeout(() => { t.classList.remove('lr-show'); setTimeout(() => t.remove(), 250); }, 2200);
+  }
 
   // ── Composer ─────────────────────────────────────────────────────
   function openComposer(sel, rect) {
@@ -156,10 +183,20 @@
   // a zero rect for an already-collapsed range).
   addBtn.addEventListener('pointerdown', (e) => {
     e.preventDefault();
-    if (!currentSel) return;
-    const rect = currentSel.range.getBoundingClientRect();
-    hideAddBtn();
-    openComposer(currentSel, rect);
+    // Re-read selection at tap time. On touch, currentSel may be stale (the
+    // selectionchange / touchend events might not have fired for the initial
+    // long-press), so prefer the live selection if any.
+    const live = getValidSelection();
+    const sel = live || currentSel;
+    if (!sel) {
+      if (HAS_TOUCH) flashHint('Long-press a sentence first, then tap "+ Note".');
+      else hideAddBtn();
+      return;
+    }
+    currentSel = sel;
+    const rect = sel.range.getBoundingClientRect();
+    if (!HAS_TOUCH) hideAddBtn();
+    openComposer(sel, rect);
   });
 
   composer.querySelector('.lr-cancel').addEventListener('click', closeComposer);
