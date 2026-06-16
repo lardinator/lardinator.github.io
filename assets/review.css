@@ -119,15 +119,17 @@ mark.lr-mark.lr-flash {
   pointer-events: auto;
 }
 
-/* On touch devices, the composer becomes a bottom sheet so the on-screen
-   keyboard pushes it up rather than clipping the Save button off-screen. */
+/* On touch devices, anchor the composer near the TOP of the viewport — clear
+   of both iOS Safari's bottom URL bar and the on-screen keyboard. */
 .lr-composer.lr-mobile {
   position: fixed;
-  top: auto !important;
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
   left: 50% !important;
-  bottom: 14px;
-  width: min(420px, calc(100vw - 28px));
-  transform: translateX(-50%) translateY(6px);
+  bottom: auto !important;
+  width: min(440px, calc(100vw - 24px));
+  transform: translateX(-50%) translateY(-6px);
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
 }
 .lr-composer.lr-mobile.lr-show {
   transform: translateX(-50%) translateY(0);

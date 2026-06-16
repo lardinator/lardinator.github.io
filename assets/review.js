@@ -14,12 +14,27 @@
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
     catch { return {}; }
   };
-  const saveAll = (d) => localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+  const saveAll = (d) => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); return true; }
+    catch (e) { return false; }
+  };
+  // Boot-time sanity check — if Safari/iOS has localStorage disabled
+  // (Private Browsing aside; also some "Block All Cookies" configs), we
+  // need to surface that loudly rather than fail silently on every save.
+  let STORAGE_OK = true;
+  try {
+    const probe = '__lr_probe_' + Date.now();
+    localStorage.setItem(probe, '1');
+    if (localStorage.getItem(probe) !== '1') STORAGE_OK = false;
+    localStorage.removeItem(probe);
+  } catch (e) {
+    STORAGE_OK = false;
+  }
   const loadPage = () => loadAll()[PAGE] || [];
   const savePage = (notes) => {
     const all = loadAll();
     if (notes.length) all[PAGE] = notes; else delete all[PAGE];
-    saveAll(all);
+    return saveAll(all);
   };
   const uid = () => Math.random().toString(36).slice(2, 10);
   const escapeHTML = (s) =>
@@ -148,13 +163,13 @@
     if (e.key === 'Escape') { hideAddBtn(); closeComposer(); closePanel(); }
   });
 
-  function flashHint(msg) {
+  function flashHint(msg, ms) {
     const t = document.createElement('div');
     t.className = 'lr-toast';
     t.textContent = msg;
     document.body.appendChild(t);
     requestAnimationFrame(() => t.classList.add('lr-show'));
-    setTimeout(() => { t.classList.remove('lr-show'); setTimeout(() => t.remove(), 250); }, 2200);
+    setTimeout(() => { t.classList.remove('lr-show'); setTimeout(() => t.remove(), 250); }, ms || 2200);
   }
 
   // ── Composer ─────────────────────────────────────────────────────
@@ -211,12 +226,14 @@
   });
 
   composer.querySelector('.lr-cancel').addEventListener('click', closeComposer);
-  composer.querySelector('.lr-save').addEventListener('click', () => {
+  function attemptSave() {
     const text = composer.querySelector('textarea').value.trim();
-    if (!text) { closeComposer(); return; }
-    // Use the frozen snapshot — `currentSel` may have been cleared while the
-    // textarea had focus.
-    if (!pendingNote) { closeComposer(); return; }
+    if (!text) { flashHint('Type a note before saving.'); return; }
+    if (!pendingNote) { flashHint('Selection was lost. Cancel and try again.'); return; }
+    if (!STORAGE_OK) {
+      flashHint('Browser storage is blocked. Settings → Safari → uncheck "Block All Cookies".', 4500);
+      return;
+    }
 
     const note = {
       id: uid(),
@@ -228,7 +245,8 @@
     };
     const notes = loadPage();
     notes.push(note);
-    savePage(notes);
+    const ok = savePage(notes);
+    if (!ok) { flashHint('Saving failed — storage write rejected.', 4500); return; }
     highlightNote(note);
     renderPanel();
     closeComposer();
@@ -236,6 +254,14 @@
     currentSel = null;
     toggle.classList.add('lr-pulse');
     setTimeout(() => toggle.classList.remove('lr-pulse'), 600);
+    flashHint('Saved · ' + notes.length + ' note' + (notes.length === 1 ? '' : 's') + ' on this page.');
+  }
+  // Both events: click (desktop) and pointerdown w/ preventDefault (iOS, so the
+  // tap fires before any selection/focus quirk can swallow it).
+  composer.querySelector('.lr-save').addEventListener('click', attemptSave);
+  composer.querySelector('.lr-save').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    attemptSave();
   });
 
   composer.querySelector('textarea').addEventListener('keydown', (e) => {
@@ -454,6 +480,15 @@
     document.addEventListener('DOMContentLoaded', restoreOnLoad);
   } else {
     restoreOnLoad();
+  }
+
+  // If localStorage is disabled (Block All Cookies, certain Private Browsing
+  // configs), warn loudly so the user knows why saves silently fail.
+  if (!STORAGE_OK) {
+    setTimeout(() => flashHint(
+      'Storage is blocked — notes cannot persist. iOS: Settings → Safari → uncheck "Block All Cookies".',
+      6000
+    ), 1500);
   }
 
   // Expose a tiny console API for debugging — only via `__lr.*`
