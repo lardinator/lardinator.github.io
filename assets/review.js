@@ -72,6 +72,10 @@
 
   // ── Selection handling ───────────────────────────────────────────
   let currentSel = null;
+  // Frozen snapshot of the selection at the moment the composer opens.
+  // Independent of the live currentSel (which iOS Safari clears as the
+  // composer's textarea steals selection focus during typing).
+  let pendingNote = null;
 
   function getValidSelection() {
     const sel = window.getSelection();
@@ -155,6 +159,10 @@
 
   // ── Composer ─────────────────────────────────────────────────────
   function openComposer(sel, rect) {
+    // Snapshot the selection text NOW. iOS Safari will clear the live
+    // selection as soon as the textarea gets focus, so we cannot rely on
+    // window.getSelection() at save time.
+    pendingNote = { quote: sel.text, ts: Date.now() };
     composer.querySelector('.lr-composer-quote').textContent =
       sel.text.length > 220 ? sel.text.slice(0, 220) + '…' : sel.text;
     const ta = composer.querySelector('textarea');
@@ -175,7 +183,10 @@
     composer.classList.add('lr-show');
     setTimeout(() => ta.focus(), 50);
   }
-  function closeComposer() { composer.classList.remove('lr-show'); }
+  function closeComposer() {
+    composer.classList.remove('lr-show');
+    pendingNote = null;
+  }
 
   // Use `pointerdown` so the action fires BEFORE iOS Safari collapses the
   // selection in response to the tap. `preventDefault` keeps the selection
@@ -203,12 +214,14 @@
   composer.querySelector('.lr-save').addEventListener('click', () => {
     const text = composer.querySelector('textarea').value.trim();
     if (!text) { closeComposer(); return; }
-    if (!currentSel) { closeComposer(); return; }
+    // Use the frozen snapshot — `currentSel` may have been cleared while the
+    // textarea had focus.
+    if (!pendingNote) { closeComposer(); return; }
 
     const note = {
       id: uid(),
       ts: Date.now(),
-      quote: currentSel.text,
+      quote: pendingNote.quote,
       comment: text,
       url: PAGE,
       title: document.title || PAGE,
@@ -219,9 +232,8 @@
     highlightNote(note);
     renderPanel();
     closeComposer();
-    window.getSelection().removeAllRanges();
+    try { window.getSelection().removeAllRanges(); } catch {}
     currentSel = null;
-    // brief confirmation pulse on the count badge
     toggle.classList.add('lr-pulse');
     setTimeout(() => toggle.classList.remove('lr-pulse'), 600);
   });
