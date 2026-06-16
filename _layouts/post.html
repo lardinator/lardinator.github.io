@@ -1,0 +1,27 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-header">
+    {% if page.order %}<p class="post-order">Post {{ page.order }} of 9</p>{% endif %}
+    <h1 class="post-title">{{ page.title }}</h1>
+    {% if page.hook %}<p class="post-hook">{{ page.hook }}</p>{% endif %}
+    {% if page.thesis %}<p class="post-thesis"><em>Thesis.</em> {{ page.thesis }}</p>{% endif %}
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <nav class="post-nav">
+    {% assign posts = site.pages | where_exp:"p","p.path contains 'series/'" | where_exp:"p","p.order" | sort: "order" %}
+    {% assign prev_order = page.order | minus: 1 %}
+    {% assign next_order = page.order | plus: 1 %}
+    <div class="prev">
+      {% for p in posts %}{% if p.order == prev_order %}<a href="{{ p.url | relative_url }}">← {{ p.title }}</a>{% endif %}{% endfor %}
+    </div>
+    <div class="next">
+      {% for p in posts %}{% if p.order == next_order %}<a href="{{ p.url | relative_url }}">{{ p.title }} →</a>{% endif %}{% endfor %}
+    </div>
+  </nav>
+</article>

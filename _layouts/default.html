@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% if page.title and page.url != '/' %}{{ page.title | escape }} — {% endif %}{{ site.title | escape }}</title>
+  <meta name="description" content="{{ page.description | default: page.hook | default: site.description | strip_html | strip_newlines | escape }}">
+  <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+    <nav class="site-nav">
+      <a href="{{ '/' | relative_url }}">Series</a>
+      <a href="{{ '/about/' | relative_url }}">About</a>
+    </nav>
+  </header>
+
+  <main class="site-main">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 {{ site.author }} · A series produced through Claude Code · <a href="{{ '/about/' | relative_url }}">About</a></p>
+  </footer>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'neutral',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+      themeVariables: { fontFamily: '"IBM Plex Sans", system-ui, sans-serif', fontSize: '14px' }
+    });
+    document.querySelectorAll('pre > code.language-mermaid').forEach(el => {
+      const pre = el.closest('pre');
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = el.textContent;
+      pre.replaceWith(div);
+    });
+    mermaid.run({ querySelector: '.mermaid' }).catch(err => console.warn('mermaid:', err));
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+title: "How I Failed to Beat the Tote"
+description: "Nine honest experiments in trying to beat the Swedish trotting tote, every false-positive autopsy, and the multi-agent research shop that built it all."
+author: "Lardinator"
+lang: en
+
+# Served as a GitHub user page (lardinator.github.io) from the repo root —
+# no project subpath.
+url: "https://lardinator.github.io"
+baseurl: ""
+
+# Markdown + syntax highlighting.
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+highlighter: rouge
+
+permalink: pretty
+
+exclude:
+  - README.md
+  - PUBLISHING.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
+
+defaults:
+  - scope:
+      path: "series"
+    values:
+      layout: post
