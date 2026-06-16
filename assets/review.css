@@ -391,5 +391,23 @@ mark.lr-mark.lr-flash {
 @media (max-width: 640px) {
   .lr-panel { width: 92vw; right: -100vw; }
   .lr-composer { width: 90vw; left: 5vw !important; right: 5vw; }
-  .lr-toggle { bottom: 14px; right: 14px; padding: 7px 12px; }
+}
+
+/* Touch devices (iOS Safari especially): the bottom URL bar covers roughly the
+   lower 80–100px of the viewport. Push both floating pills up so they sit
+   above the chrome. Also respect the home-indicator safe-area on notched
+   devices. */
+@media (pointer: coarse) {
+  .lr-toggle {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+    right: 14px;
+    padding: 9px 15px;
+  }
+  .lr-add-btn.lr-fixed {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 150px);
+    right: 14px;
+  }
+  .lr-toast {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 210px);
+  }
 }
