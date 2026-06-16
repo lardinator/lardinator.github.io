@@ -47,7 +47,7 @@ Moving to the thin+small cell, bet-all (no model filter) returned -18.7% on the 
 -1.1% is close to breakeven in dollar terms. The CI of [-40.6%, +45.6%] makes the point estimate meaningless — we cannot distinguish it from -40% or +45%. But the gradient itself — -33% in deep pools to -1.1% in the thinnest, smallest-field corner — is exactly what the structural theory predicted. The regime lens correctly located the least efficient corner of the market.
 
 <figure>
-  <div class="placeholder">📊 Chart: ROI by regime cell with race-clustered bootstrap 95% confidence intervals. The gradient from deep to thin pools is real; the CI on the thin-small cell is wide enough to span the entire chart. · render with matplotlib code in <code>blog/series/_specs/08-regime-lens-statistical-void.specs.md</code></div>
+  <img src="/assets/figures/efficiency-gradient.png" alt="ROI by regime cell with race-clustered bootstrap 95% confidence intervals. The gradient from deep to thin pools is real; the CI on the thin-small cell is wide enough to span the entire chart." loading="lazy">
   <figcaption>ROI by regime cell with race-clustered bootstrap 95% confidence intervals. The gradient from deep to thin pools is real; the CI on the thin-small cell is wide enough to span the entire chart.</figcaption>
 </figure>
 

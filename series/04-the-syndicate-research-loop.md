@@ -57,7 +57,7 @@ Three experiments cleared this gate across the whole program:
 | 072 | Strict filter + ML v0006, NO/FR/AU trio, VR=4.0 | +205.75% | +71.50% | 40 | Staged, not deployed |
 
 <figure>
-  <div class="placeholder">📊 Chart: Experiments 069, 071, and 072 — CI lower bounds vs gate thresholds · render with matplotlib code in <code>blog/series/_specs/04-the-syndicate-research-loop.specs.md</code></div>
+  <img src="/assets/figures/promoted-experiments-table.png" alt="Experiments 069, 071, and 072 all cleared the promotion gate. All three were staged to betting/deploy/staged/ and never deployed to live betting. The CI lower bounds tell you exactly why each passed; the status line tells you the staging-to-deployment gap the postmortem names as jank." loading="lazy">
   <figcaption>Experiments 069, 071, and 072 all cleared the promotion gate. All three were staged to betting/deploy/staged/ and never deployed to live betting. The CI lower bounds tell you exactly why each passed; the status line tells you the staging-to-deployment gap the postmortem names as jank.</figcaption>
 </figure>
 
@@ -150,7 +150,7 @@ The 40-winner floor exists because a CI on skewed payouts needs adequate sample 
 The gate is right and watching it kill plausible ideas through thin data is genuinely uncomfortable — both can be true in the same sentence. The design tension is real and the fix — include AU data to expand the universe — was identified but not completed before closeout.
 
 <figure>
-  <div class="placeholder">📊 Chart: CI bottleneck regime heatmap — winner count vs CI outcome · render with matplotlib code in <code>blog/series/_specs/04-the-syndicate-research-loop.specs.md</code></div>
+  <img src="/assets/figures/ci-bottleneck-regime-heatmap.png" alt="A two-axis grid showing the relationship between test winner count and CI outcome. The structural bottleneck zone — directionally positive ROI, CI excludes zero, but fewer than 40 winners — is the region that killed ideas through data sparsity. The NO+FR regime consistently landed in that zone; adding AU data moved the winner count out of it." loading="lazy">
   <figcaption>A two-axis grid showing the relationship between test winner count and CI outcome. The structural bottleneck zone — directionally positive ROI, CI excludes zero, but fewer than 40 winners — is the region that killed ideas through data sparsity. The NO+FR regime consistently landed in that zone; adding AU data moved the winner count out of it.</figcaption>
 </figure>
 

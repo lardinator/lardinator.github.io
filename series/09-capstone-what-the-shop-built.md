@@ -35,7 +35,7 @@ As Hausch, Ziemba, and Rubinstein confirmed in 1981, the win pool at major track
 The most useful output of the program is not a data asset or an API. It is a catalogue of the ways a quant researcher can fool themselves, with specific numbers attached to each failure.
 
 <figure>
-  <div class="placeholder">📊 Chart: Every promising result in 84 experiments traced to one of five reproducible self-deceptions — naming them explicitly is more valuable than any single backtest. · render with matplotlib code in <code>blog/series/_specs/09-capstone-what-the-shop-built.specs.md</code></div>
+  <div class="placeholder">Every promising result in 84 experiments traced to one of five reproducible self-deceptions — naming them explicitly is more valuable than any single backtest. (false-positive-checklist: styled HTML table — placeholder retained per spec)</div>
   <figcaption>The five failure modes that generated every spurious edge in 84 experiments. Each row maps to a specific investigation; each fix is mechanical and checkable.</figcaption>
 </figure>
 
@@ -184,7 +184,7 @@ Everything else was closed on 2026-06-16.
 The Syndicate methodology is domain-agnostic. The betting program is the narrative spine; the scaffold fits any domain where data is messy, the edge is small, the sample is limited, and the temptation to move goalposts is constant.
 
 <figure>
-  <div class="placeholder">📊 Chart: 84 experiments, nine search angles, zero validated edges — the shape of an honest null result across four months. · render with matplotlib code in <code>blog/series/_specs/09-capstone-what-the-shop-built.specs.md</code></div>
+  <img src="/assets/figures/experiment-arc.png" alt="84 experiments mapped by angle and verdict. Every search ends in the same place — the market takes its cut — and knowing exactly how each angle failed is the finding." loading="lazy">
   <figcaption>84 experiments mapped by angle and verdict. Every search ends in the same place — the market takes its cut — and knowing exactly how each angle failed is the finding.</figcaption>
 </figure>
 

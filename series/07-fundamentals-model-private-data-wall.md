@@ -55,7 +55,7 @@ The fundamentals model is a LightGBM classifier trained on horse-level features 
 The core measurement is the Brier score: the mean squared error between predicted win probabilities and actual outcomes. Lower is better.
 
 <figure>
-  <div class="placeholder">📊 Chart: Every public-data model the team built sits worse than the closing price; the model's only contribution is a sliver so thin it is invisible at chart resolution. · render with matplotlib code in <code>blog/series/_specs/07-fundamentals-model-private-data-wall.specs.md</code></div>
+  <img src="/assets/figures/brier-ladder.png" alt="Brier score ladder showing the position of the full public-data model (0.0816), closing odds (0.0721), and blend (0.0720) relative to earlier time-horizon measurements from a February–May 2026 sub-sample. The model's independent contribution — the gap between 0.0721 and 0.0720 — is barely visible at chart resolution. All model scores sit above (worse than) the closing odds; the blend is indistinguishable from the close." loading="lazy">
   <figcaption>Brier score ladder showing the position of the full public-data model (0.0816), closing odds (0.0721), and blend (0.0720) relative to earlier time-horizon measurements from a February–May 2026 sub-sample. The model's independent contribution — the gap between 0.0721 and 0.0720 — is barely visible at chart resolution. All model scores sit above (worse than) the closing odds; the blend is indistinguishable from the close.</figcaption>
 </figure>
 
@@ -72,7 +72,7 @@ The Brier improvement from adding the fundamentals model is 0.0001 in absolute t
 The three conditional logit estimates of *b* across program phases, presented before interpretation:
 
 <figure>
-  <div class="placeholder">📊 Chart: The independent signal from the best public-data model is a fraction of what would be needed to clear takeout, and adding features did not move it. · render with matplotlib code in <code>blog/series/_specs/07-fundamentals-model-private-data-wall.specs.md</code></div>
+  <img src="/assets/figures/b-coefficient-regime.png" alt="Number-line diagram showing the blend coefficient b, with the fundamentals program's estimates (b ≈ 0.15, with Phase 3a conditional logit b = 0.173 ± 0.031) in the sub-takeout zone, and the inferred Benter-program landmark (b ~ 1.0) far to the right. The arrow from model-v1 to model-v2 shows b moving 0.152 to 0.146 as features were added — sideways, not up." loading="lazy">
   <figcaption>Number-line diagram showing the blend coefficient b, with the fundamentals program's estimates (b ≈ 0.15, with Phase 3a conditional logit b = 0.173 ± 0.031) in the sub-takeout zone, and the intuitive Benter-program landmark (b ~ 1.0, derived from the Hong Kong context, not a measured value in this study) far to the right. The arrow from model-v1 to model-v2 shows b moving 0.152 to 0.146 as features were added — sideways, not up.</figcaption>
 </figure>
 
@@ -109,7 +109,7 @@ The coordinator recognized the spatial signature: apparent edge concentrated in 
 The clean result: lightly-raced horses with the look-ahead removed returned −17%. All clean slices were negative. The genetic signal that looked strongest in the thin-data regime vanished when the contamination was removed.
 
 <figure>
-  <div class="placeholder">📊 Chart: The apparent genetic-merit edge was entirely concentrated where the data contamination was strongest — it reversed when the look-ahead was removed. · render with matplotlib code in <code>blog/series/_specs/07-fundamentals-model-private-data-wall.specs.md</code></div>
+  <img src="/assets/figures/blup-starts-chart.png" alt="Bar chart of apparent ROI versus number of prior starts, with two series: the contaminated look-ahead model and the clean model. The look-ahead bars peak sharply at the 0–5 start bin (+26.4% at edge ≥ 0.1) and decay toward the takeout floor as starts increase. The clean bars are uniformly below zero, with the ≤5 starts bin at −17%. A vertical dashed line at 5 starts marks where contamination is most severe." loading="lazy">
   <figcaption>Bar chart of apparent ROI versus number of prior starts, with two series: the contaminated look-ahead model and the clean model. The look-ahead bars peak sharply at the 0–5 start bin (+26.4% at edge ≥ 0.1) and decay toward the takeout floor as starts increase. The clean bars are uniformly below zero, with the ≤5 starts bin at −17%. A vertical dashed line at 5 starts marks where contamination is most severe. A callout box notes the same signature appeared in the Dr-Z investigation.</figcaption>
 </figure>
 

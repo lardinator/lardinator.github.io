@@ -86,7 +86,7 @@ The verifier agent was given a specific brief: check place-rate per win-odds buc
 The bettable universe in France shows sensible place rates. Horses with win odds above 15 (longshots) place about 12.8% of the time — first or second out of a field. Horses in the 8–15 bucket place about 34.2%. These numbers are physically coherent with the well-documented favorite-longshot bias: longshots underperform their raw odds-implied probability even further in exotic pools (Snowberg and Wolfers, 2010).
 
 <figure>
-  <div class="placeholder">📊 Chart: Place-rate anomaly table: FR bettable universe vs. VR&gt;=1.0 selected subset, by win-odds bucket · render with matplotlib code in <code>blog/series/_specs/05-drz-look-ahead-postmortem.specs.md</code></div>
+  <img src="/assets/figures/05-place-rate-anomaly.png" alt="Place-rate anomaly: FR bettable universe vs. VR>=1.0 selected subset, by win-odds bucket. 15+ longshots place at 12.8% in the universe and 95.0% in the VR-selected subset. The 8-15 bucket places at 34.2% in the universe and 96.0% in the selected subset. The impossible gap is the definitive proof of look-ahead." loading="lazy">
   <figcaption>Place-rate anomaly table: FR bettable universe vs. VR>=1.0 selected subset, by win-odds bucket. 15+ longshots place at 12.8% in the universe and 95.0% in the VR-selected subset. The 8-15 bucket places at 34.2% in the universe and 96.0% in the selected subset. The impossible gap is the definitive proof of look-ahead.</figcaption>
 </figure>
 

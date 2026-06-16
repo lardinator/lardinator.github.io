@@ -61,7 +61,7 @@ The seven trio winners recorded after the T-1 bug was fixed illustrate the struc
 Jarlsberg is the closest to well-behaved — relatively low odds, probably a somewhat thicker pre-close pool. Århus is the extreme case: the scanner ceiling of 10,000× collapses to 63× at close. A 99.4% drop. The off-track money that arrived post-close was not a small rounding correction; it was a multiple of the entire existing pool for that combination.
 
 <figure>
-  <div class="placeholder">📊 Chart: Trio Odds Collapse: T-1 Snapshot vs ATG Realized Closing Dividend · render with matplotlib code in <code>blog/series/_specs/03-t1-odds-bug.specs.md</code></div>
+  <img src="/assets/figures/03-trio-collapse-dotplot.png" alt="Pair of dots per race — left dot the T-1 snapshot dividend, right dot the ATG realized closing dividend — connected by a line showing the collapse. Log-scaled range from 63× to 10,000×. Århus anchors the extreme right, with the longest drop line." loading="lazy">
   <figcaption>Pair of dots per race — left dot the T-1 snapshot dividend, right dot the ATG realized closing dividend — connected by a line showing the collapse. Log-scaled range from 63× to 10,000×. Århus anchors the extreme right, with the longest drop line.</figcaption>
 </figure>
 
@@ -120,7 +120,7 @@ The inflated paper backtest ROIs for the spray strategies were +4,831% for SE/DK
 After correcting settlement to `final_odds` throughout the pipeline, the overall paper system went from +243,016 SEK (+658% ROI) to −7,496 SEK (−20% ROI) on the same 7,112 bets with 12 winners.
 
 <figure>
-  <div class="placeholder">📊 Chart: Before/After P/L: T-1 Settlement vs Realized Closing Dividend · render with matplotlib code in <code>blog/series/_specs/03-t1-odds-bug.specs.md</code></div>
+  <img src="/assets/figures/03-before-after-pl.png" alt="Grouped bar chart comparing T-1 snapshot settlement (buggy, red) vs. ATG realized closing dividend settlement (corrected, green) for the main strategy results. Zero line prominently marked; only the buggy bars cross it." loading="lazy">
   <figcaption>Grouped bar chart comparing T-1 snapshot settlement (buggy, red) vs. ATG realized closing dividend settlement (corrected, green) for the main strategy results. Zero line prominently marked; only the buggy bars cross it.</figcaption>
 </figure>
 

@@ -43,7 +43,7 @@ The "price" you observe at any point before the pool closes is not the price you
 The second thing that matters is understanding what pool you are actually in, because "ATG win odds on a French race" and "ATG win odds on a Swedish race" are very different objects.
 
 <figure>
-  <div class="placeholder">📊 Chart: Pool regime heatmap — co-mingled vs. thin local by country × bet type · render with matplotlib code in <code>blog/series/_specs/02-tote-mechanics-primer.specs.md</code></div>
+  <img src="/assets/figures/pool-architecture-regime-map.png" alt="Pool structure regime map. Rows are country/operator; columns are bet type. Cell color and median turnover (SEK) distinguish co-mingled and merged pools (deep, SE/DK-joined or host-tote) from thin local pools. Takeout rates are labeled per country-bet combination." loading="lazy">
   <figcaption>Pool structure regime map. Rows are country/operator; columns are bet type. Cell color and median turnover (SEK) distinguish co-mingled and merged pools (deep, SE/DK-joined or host-tote) from thin local pools. Takeout rates are labeled per country-bet combination.</figcaption>
 </figure>
 
@@ -77,7 +77,7 @@ More than 70% of horses are still more than 10% away from their closing price at
 The move is also directional, consistent with what Snowberg and Wolfers documented as the favourite-longshot bias (2010). Favourites — horses at odds below 3.0 — tend to shorten into the close: their T-60s price is about 6% longer than the closing dividend, with a median move of 10%. Longshots at 8.0 or above drift out: their T-60s price reads approximately 17% below the closing dividend value — these horses drift outward to a longer price by close — with a median move of 20%. Only 22% of longshots are within 10% of the closing dividend at T-60s.
 
 <figure>
-  <div class="placeholder">📊 Chart: Late-move directional asymmetry — favourite shortens, longshot drifts, relative to closing dividend · render with matplotlib code in <code>blog/series/_specs/02-tote-mechanics-primer.specs.md</code></div>
+  <img src="/assets/figures/late-move-directional-asymmetry.png" alt="Late-move directional asymmetry. Two series indexed to the closing dividend (close = 1.0). Favourites shorten into post; longshots drift out. The shaded band shows the ±5% range — only 13% of all horses fall within it at T-60s. Source: 1,569 settled horses, late-odds-movement memory, measured 2026-06-16." loading="lazy">
   <figcaption>Late-move directional asymmetry. Two series indexed to the closing dividend (close = 1.0). Favourites shorten into post; longshots drift out. The shaded band shows the ±5% range — only 13% of all horses fall within it at T-60s. Source: 1,569 settled horses, late-odds-movement memory, measured 2026-06-16.</figcaption>
 </figure>
 
@@ -147,7 +147,7 @@ The Brier score tells the cleaner story. A Brier score measures forecast accurac
 | Fundamentals model (OOS) | 0.081 | +0.01666 |
 
 <figure>
-  <div class="placeholder">📊 Chart: Brier score by price source — closing price is sharpest at every horizon · render with matplotlib code in <code>blog/series/_specs/02-tote-mechanics-primer.specs.md</code></div>
+  <img src="/assets/figures/brier-score-trajectory.png" alt="Brier score by price source, measured on 374 races / 3,944 horses (Feb–mid-May 2026). Lower is better. The closing price (0.06434, dashed line) is the sharpest predictor at every prior time horizon. A ten-feature fundamentals model scores 0.0812 — approximately 13% worse than the close." loading="lazy">
   <figcaption>Brier score by price source, measured on 374 races / 3,944 horses (Feb–mid-May 2026). Lower is better. The closing price (0.06434, dashed line) is the sharpest predictor at every prior time horizon. A ten-feature fundamentals model scores 0.0812 — approximately 13% worse than the close. Source: late-odds-movement memory; tote-efficiency-synthesis memory; ATG api.travsport.se.</figcaption>
 </figure>
 

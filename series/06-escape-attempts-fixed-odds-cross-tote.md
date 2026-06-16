@@ -58,7 +58,7 @@ The tell is architectural. Bet types the host country also offers (France's Gagn
 464,787 odds snapshots collected between 2026-02-23 and 2026-06-16 confirmed the architecture quantitatively. The regime map, derived from those snapshots and §7, classifies each country-by-bet-type combination:
 
 <figure>
-  <div class="placeholder">📊 Chart: Pool Regime Map — ATG Turnover Medians (SEK) by Country and Bet Type · render with matplotlib code in <code>blog/series/_specs/06-escape-attempts-fixed-odds-cross-tote.specs.md</code></div>
+  <img src="/assets/figures/pool-regime-map.png" alt="Pool regime map showing median turnover (SEK) per country and bet type across 464,787 snapshots (Feb–Jun 2026). SE and DK rows are home-merged; GB and HK co-mingle into foreign totes; FR singles co-mingle into PMU while FR komb/trio run LOCAL thin; NO and FI run ALL LOCAL thin — the only countries where a cross-tote oracle angle is structurally possible." loading="lazy">
   <figcaption>Pool regime map showing median turnover (SEK) per country and bet type across 464,787 snapshots (Feb–Jun 2026). SE and DK rows are home-merged; GB and HK co-mingle into foreign totes; FR singles co-mingle into PMU while FR komb/trio run LOCAL thin; NO and FI run ALL LOCAL thin — the only countries where a cross-tote oracle angle is structurally possible.</figcaption>
 </figure>
 
